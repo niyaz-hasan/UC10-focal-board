@@ -24,7 +24,7 @@ module "alb" {
 module "target_group" {
   source      = "./modules/target_group"
   name        = "target-group"
-  port        = 4000
+  port        = 8000
   vpc_id      = module.vpc.vpc_id
   path        = "/"
 }
@@ -40,31 +40,12 @@ module "sg_group" {
 locals {
   user_data = <<-EOF
          #!/bin/bash
-         sudo dnf update -y
-         sudo dnf install -y docker git 
-         sudo dnf install -y libxcrypt-compat
-         sudo systemctl enable docker
+         sudo apt update -y
+         sudo apt-get install -y docker.io
          sudo systemctl start docker
-         sudo usermod -aG docker ec2-user
-         sleep 10
-         # Install Docker Compose
-         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-         sudo chmod +x /usr/local/bin/docker-compose
-         
-         # Clone working DevLake repo with UI support
-         cd /home/ec2-user
-         git clone https://github.com/merico-dev/lake.git devlake-setup
-         cd devlake-setup
-         cp -arp devops/releases/lake-v0.21.0/docker-compose.yml ./
-         
-         
-         # Set up .env file
-         cp env.example .env
-         echo "ENCRYPTION_SECRET=super-secret-123" >> .env
-         
-         # Run Docker Compose
-         docker-compose up -d
-         sleep 40
+         sudo systemctl enable docker
+         usermod -aG docker ubuntu
+         docker run -d -p 8000:8000 mattermost/focalboard
     EOF
 }
 
