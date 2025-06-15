@@ -81,6 +81,10 @@ jobs:
         id: test
         run: terraform test
         continue-on-error: true 
+      
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        continue-on-error: true
 
       - name: Generate Terraform JSON Plan
         run: |
