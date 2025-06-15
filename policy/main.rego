@@ -1,3 +1,5 @@
+package terraform.policy
+
 deny[msg] {
   resource := input.resource_changes[_]
   resource.type == "aws_instance"
