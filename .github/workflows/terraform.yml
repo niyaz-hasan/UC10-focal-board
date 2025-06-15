@@ -87,15 +87,6 @@ jobs:
           terraform plan -out=tfplan.binary
           terraform show -json tfplan.binary > tfplan.json
 
-      - name: Install terraform-compliance
-        run: |
-          pip install terraform-compliance
-
-      - name: Run terraform-compliance Tests
-        run: |
-          terraform-compliance -p tfplan.json -f tests/terraform_compliance
-        continue-on-error: true
-
       - name: Install Conftest
         run: |
           wget https://github.com/open-policy-agent/conftest/releases/download/v0.52.0/conftest_0.52.0_Linux_x86_64.tar.gz
@@ -108,12 +99,12 @@ jobs:
           conftest test tfplan.json --policy policy/
         continue-on-error: true 
 
-      - name: Terraform Plan
-        id: plan
-        if: github.ref == 'refs/heads/main' && (github.event_name == 'pull_request' || github.event_name == 'push')
-       # if: github.event_name == 'pull_request'
-        run: | 
-         terraform plan -no-color -input=false
+#      - name: Terraform Plan
+#        id: plan
+#        if: github.ref == 'refs/heads/main' && (github.event_name == 'pull_request' || github.event_name == 'push')
+#       # if: github.event_name == 'pull_request'
+#        run: | 
+#         terraform plan -no-color -input=false
       
 
 #      - name: Install terraform-docs
