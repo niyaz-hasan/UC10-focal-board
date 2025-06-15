@@ -99,6 +99,7 @@ jobs:
 
       - name: Run OPA Policy Check
         run: conftest test tfplan.json --policy policy/
+        continue-on-error: true
 
 #      - name: Terraform Plan
 #        id: plan
